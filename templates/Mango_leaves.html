@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Mango Disease Detection AI</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Poppins',sans-serif;
+}
+
+body{
+min-height:100vh;
+background:linear-gradient(135deg,#0f172a,#1e293b,#065f46);
+display:flex;
+justify-content:center;
+align-items:center;
+padding:20px;
+}
+
+.container{
+width:100%;
+max-width:900px;
+background:rgba(255,255,255,0.08);
+backdrop-filter:blur(20px);
+border:1px solid rgba(255,255,255,0.1);
+border-radius:30px;
+padding:30px;
+color:white;
+box-shadow:0 20px 40px rgba(0,0,0,0.3);
+}
+
+.header{
+text-align:center;
+margin-bottom:30px;
+}
+
+.header h1{
+font-size:2.5rem;
+font-weight:700;
+}
+
+.header p{
+opacity:.8;
+margin-top:10px;
+}
+
+.content{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:25px;
+}
+
+.preview-box{
+background:rgba(255,255,255,0.05);
+border-radius:20px;
+padding:20px;
+text-align:center;
+}
+
+.preview-box img{
+width:100%;
+height:350px;
+object-fit:cover;
+border-radius:15px;
+display:none;
+}
+
+.placeholder{
+height:350px;
+display:flex;
+align-items:center;
+justify-content:center;
+border:2px dashed rgba(255,255,255,0.2);
+border-radius:15px;
+font-size:18px;
+}
+
+.controls{
+display:flex;
+flex-direction:column;
+gap:15px;
+}
+
+.btn{
+    position:relative;
+
+    padding:15px 20px;
+
+    border:none;
+    border-radius:18px;
+
+    cursor:pointer;
+
+    font-size:16px;
+    font-weight:600;
+
+    transition:all .3s ease;
+
+    overflow:hidden;
+
+    box-shadow:
+    0 10px 25px rgba(0,0,0,0.2);
+}
+
+.btn:hover{
+    transform:translateY(-4px);
+}
+
+.btn:active{
+    transform:scale(.97);
+}
+
+.gallery{
+    background:linear-gradient(
+    135deg,
+    #3b82f6,
+    #2563eb
+    );
+
+    color:white;
+}
+
+.camera{
+    background:linear-gradient(
+    135deg,
+    #f97316,
+    #ea580c
+    );
+
+    color:white;
+}
+
+.predict{
+    background:linear-gradient(
+    135deg,
+    #22c55e,
+    #15803d
+    );
+
+    color:white;
+}
+
+.gallery{
+background:#3b82f6;
+color:white;
+}
+
+.camera{
+background:#f97316;
+color:white;
+}
+
+.predict{
+background:#22c55e;
+color:white;
+}
+
+.btn:hover{
+transform:translateY(-3px);
+}
+
+.result{
+    margin-top:20px;
+
+    background:rgba(255,255,255,0.1);
+
+    border:1px solid rgba(255,255,255,0.15);
+
+    backdrop-filter:blur(15px);
+
+    border-radius:20px;
+
+    padding:25px;
+
+    animation:fadeIn .5s ease;
+}
+
+.result h2{
+margin-bottom:10px;
+}
+
+.badge{
+display:inline-block;
+padding:8px 16px;
+border-radius:20px;
+background:#22c55e;
+font-weight:600;
+margin-top:10px;
+}
+.confidence-badge{
+    display:inline-block;
+
+    margin-top:12px;
+
+    padding:10px 18px;
+
+    border-radius:50px;
+
+    background:linear-gradient(
+    135deg,
+    #22c55e,
+    #15803d
+    );
+
+    color:white;
+
+    font-weight:700;
+}
+.spinner{
+display:none;
+margin-top:15px;
+text-align:center;
+}
+
+.loader{
+width:50px;
+height:50px;
+border:5px solid rgba(255,255,255,0.2);
+border-top:5px solid white;
+border-radius:50%;
+animation:spin 1s linear infinite;
+margin:auto;
+}
+
+@keyframes spin{
+100%{
+transform:rotate(360deg);
+}
+}
+
+@media(max-width:768px){
+
+.content{
+grid-template-columns:1fr;
+}
+
+.header h1{
+font-size:2rem;
+}
+
+}
+.language-container{
+    margin:20px 0;
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+}
+
+.language-container label{
+    color:white;
+    font-weight:600;
+    font-size:15px;
+}
+
+.language-select{
+    padding:14px;
+    border-radius:14px;
+    border:none;
+    outline:none;
+    font-size:16px;
+    font-weight:600;
+
+    background:rgba(255,255,255,0.12);
+    color:white;
+
+    backdrop-filter:blur(10px);
+
+    cursor:pointer;
+
+    transition:all .3s ease;
+}
+
+.language-select:hover{
+    background:rgba(255,255,255,0.18);
+}
+
+.language-select option{
+    color:black;
+}
+@keyframes fadeIn{
+
+from{
+opacity:0;
+transform:translateY(15px);
+}
+
+to{
+opacity:1;
+transform:translateY(0);
+}
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="header">
+    <h1>🍃 Mango Disease Detection AI</h1>
+
+    <p>Detect mango leaf diseases instantly using Artificial Intelligence</p>
+
+    <div class="warning">
+        ⚠️ This AI model is trained only on mango leaf diseases.
+        Predictions for other plant species may be inaccurate.
+    </div>
+</div>
+
+<div class="content">
+
+<div class="preview-box">
+
+<div class="placeholder" id="placeholder">
+Select an Image
+</div>
+
+<img id="preview">
+
+</div>
+
+<div>
+
+<div class="controls">
+
+<input type="file" id="galleryInput" hidden accept="image/*">
+
+<input type="file"
+id="cameraInput"
+hidden
+accept="image/*"
+capture="environment">
+
+<button class="btn gallery"
+onclick="document.getElementById('galleryInput').click()">
+📁 Upload From Gallery
+</button>
+
+</p>
+<button class="btn camera"
+onclick="document.getElementById('cameraInput').click()">
+📷 Capture From Camera
+</button>
+<div class="language-container">
+    <label>Select Language</label>
+
+    <select id="language" class="language-select">
+        <option value="en">🇬🇧 English</option>
+        <option value="hi">🇮🇳 हिन्दी</option>
+    </select>
+</div>
+<button class="btn predict"
+onclick="predictDisease()">
+🔍 Predict Disease
+</button>
+
+<p style="color:#dbcabc;font-weight:bold;">
+⚠️ For best accuracy, upload a clear image containing a single mango leaf.
+Images with multiple leaves, branches, or complex backgrounds may reduce accuracy.
+</div>
+
+<div class="spinner" id="spinner">
+<div class="loader"></div>
+<p>Analyzing Leaf...</p>
+</div>
+
+<div class="result" id="result"></div>
+
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+let selectedFile=null;
+
+const gallery=document.getElementById("galleryInput");
+const camera=document.getElementById("cameraInput");
+
+gallery.addEventListener("change",showImage);
+camera.addEventListener("change",showImage);
+
+function showImage(e){
+
+selectedFile=e.target.files[0];
+
+const reader=new FileReader();
+
+reader.onload=function(event){
+
+document.getElementById("preview").src=event.target.result;
+
+document.getElementById("preview").style.display="block";
+
+document.getElementById("placeholder").style.display="none";
+
+};
+
+reader.readAsDataURL(selectedFile);
+
+}
+
+async function predictDisease(){
+
+if(!selectedFile){
+
+alert("Please select an image");
+
+return;
+
+}
+
+document.getElementById("spinner").style.display="block";
+
+document.getElementById("result").style.display="none";
+
+const formData=new FormData();
+
+formData.append("file", selectedFile);
+
+const language =
+document.getElementById("language").value;
+
+formData.append("language", language);
+
+const response=await fetch("/predict",{
+method:"POST",
+body:formData
+});
+
+const data=await response.json();
+
+document.getElementById("spinner").style.display="none";
+
+document.getElementById("result").style.display="block";
+
+document.getElementById("result").innerHTML=`
+<h2>${data.disease}</h2>
+
+<div class="confidence-badge">
+    Confidence: ${data.confidence}%
+</div>
+
+<br><br>
+
+<p><strong>Remedy:</strong></p>
+
+<p>${data.remedy}</p>
+`;
+
+}
+
+</script>
+
+</body>
+</html>
