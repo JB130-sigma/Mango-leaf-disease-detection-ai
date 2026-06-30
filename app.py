@@ -15,8 +15,7 @@ model = tf.keras.models.load_model(
 with open("class_names_Mango.json", "r") as f:
     class_names = json.load(f)
     print("Model Loaded Successfully")
-    print("Classes:", class_names)
-
+    print("Classes:", class_names)
 # Remedies
 remedies = {
     "Anthracnose": {
