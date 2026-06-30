@@ -6,12 +6,14 @@ The project also includes a Non-Mango detection feature to identify images that 
 
 Features
 
+
 - Detects multiple mango leaf diseases
 - Identifies non-mango leaf images
 - Provides disease remedies
 - Supports English and Hindi remedies
 - User-friendly web interface
 - Real-time image prediction
+
 
 Technologies Used
 
